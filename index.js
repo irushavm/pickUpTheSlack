@@ -11,7 +11,8 @@ function handleRequest(request, response){
         console.log(request.url);
         dispatcher.dispatch(request, response);
     } catch(err) {
-        console.log(err);
+        response.writeHead(500,{'Content-Type':'plain/text'});
+        return response.end('The office is not online :(');
     }
 }
 
@@ -27,7 +28,6 @@ dispatcher.onGet('/', function(req, res) {
 });
 
 dispatcher.onPost('/ping', function(req, res) {
-
   if(req.params.token === config.slackValidationToken) {
     request({'url':config.remoteURL+req.url,
     'method':'POST',
@@ -43,6 +43,11 @@ dispatcher.onPost('/ping', function(req, res) {
     console.log(result);
     res.writeHead(result.statusCode,result.headers);
     return res.end(resultBody);
+  })
+  .on('error', function(err) {
+    console.log(err);
+    res.writeHead(500,{'Content-Type':'plain/text'});
+    return res.end('The office is not online :(');
   });
   }else {
     res.writeHead(401);
