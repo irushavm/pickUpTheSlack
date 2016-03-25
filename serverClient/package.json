@@ -1,7 +1,7 @@
 {
-  "name": "pick-up-the-slack",
+  "name": "pick-up-the-slack-client",
   "version": "1.0.0",
-  "description": "A server to intercept slack command requests and send out a ping a to the complimentary program running on a remote computer",
+  "description": "The client that responds to the server requests",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -22,8 +22,10 @@
   },
   "homepage": "https://github.com/irushavm/pickUpTheSlack#readme",
   "dependencies": {
+    "edge": "^5.0.0",
     "httpdispatcher": "~1.0.0",
     "npm": "^3.8.3",
+    "player": "^0.6.1"
   },
   "devDependencies": {
     "jshint": "^2.9.1"
