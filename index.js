@@ -2,6 +2,7 @@
 var http = require('http');
 var dispatcher = require('httpdispatcher');
 var config = require('./config.json');
+var request = require('request');
 
 var PORT = process.env.PORT || 5000;
 
@@ -22,16 +23,30 @@ server.listen(PORT, function(){
 
 dispatcher.onGet('/', function(req, res) {
   res.writeHead(200, {'Content-Type': 'application/json'});
-  res.end(JSON.stringify({status:'online',timeStamp:new Date()}));
+  return res.end(JSON.stringify({status:'online',timeStamp:new Date()}));
 });
 
 dispatcher.onPost('/ping', function(req, res) {
 
   if(req.params.token === config.slackValidationToken) {
-    res.redirect(config.remoteURL+req.url);
+    request({'url':config.remoteURL,
+    'method':'POST',
+    'params': req.params,
+    'headers': req.headers,
+    'form': req.body,
+    'timeout': 500
+  },function(err,result,resultBody){
+    if(err) {
+      res.writeHead(404,'The office is not online :(');
+      return res.end(resultBody);
+    }
+    console.log(result);
+    res.writeHead(result.statusCode,result.headers);
+    return res.end(resultBody);
+  });
   }else {
     res.writeHead(401);
-    res.end('Unauthorized');
+    return res.end('Unauthorized');
   }
 });
 

@@ -23,7 +23,8 @@
   "homepage": "https://github.com/irushavm/pickUpTheSlack#readme",
   "dependencies": {
     "httpdispatcher": "~1.0.0",
-    "npm": "^3.8.3"
+    "npm": "^3.8.3",
+    "request": "^2.69.0"
   },
   "devDependencies": {
     "jshint": "^2.9.1"
