@@ -29,7 +29,7 @@ dispatcher.onGet('/', function(req, res) {
 dispatcher.onPost('/ping', function(req, res) {
 
   if(req.params.token === config.slackValidationToken) {
-    request({'url':config.remoteURL,
+    request({'url':config.remoteURL+req.url,
     'method':'POST',
     'params': req.params,
     'headers': req.headers,
