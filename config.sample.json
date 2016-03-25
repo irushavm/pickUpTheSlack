@@ -1,0 +1,4 @@
+{
+  "slackValidationToken": "MY_SLACK_INTEGRATION_TOKEN",
+  "remoteURL": "MY_IP"
+}

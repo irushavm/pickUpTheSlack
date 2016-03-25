@@ -1,0 +1,29 @@
+{
+  "name": "pick-up-the-slack",
+  "version": "1.0.0",
+  "description": "A server to intercept slack command requests and send out a ping a to the complimentary program running on a remote computer",
+  "main": "index.js",
+  "scripts": {
+    "test": "jshint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/irushavm/pickUpTheSlack.git"
+  },
+  "keywords": [
+    "slack",
+    "ping"
+  ],
+  "author": "Irusha Vidanamadura <irusha.dilshan@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/irushavm/pickUpTheSlack/issues"
+  },
+  "homepage": "https://github.com/irushavm/pickUpTheSlack#readme",
+  "dependencies": {
+    "httpdispatcher": "~1.0.0"
+  },
+  "devDependencies": {
+    "jshint": "^2.9.1"
+  }
+}
