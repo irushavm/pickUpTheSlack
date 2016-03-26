@@ -32,7 +32,7 @@ dispatcher.onPost('/ping', function(req, res) {
     req.params.team_domain === config.SLACK_TEAM_DOMAN &&
     req.params.command === config.SLACK_COMMAND) {
     var currTime = new Date().getHours()*60 + new Date().getMinutes();
-    if(currTime < config.END_TIME && currTime > config.START_TIME) {
+    if((currTime < config.END_TIME && currTime > config.START_TIME) || req.params.text === 'force') {
       request({'url':config.REMOTE_URL+req.url,
       'method':'POST',
       'params': req.params,
