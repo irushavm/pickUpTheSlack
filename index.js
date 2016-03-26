@@ -29,9 +29,9 @@ dispatcher.onGet('/', function(req, res) {
 
 dispatcher.onPost('/ping', function(req, res) {
   if(req.params.token === config.slackValidationToken) {
-    var currTime = new Date().getHours()*60 + new Date().getMinutes;
+    // var currTime = new Date().getHours()*60 + new Date().getMinutes;
 
-    if(currTime < config.END_TIME && currTime > config.START_TIME) {
+    // if(currTime < config.END_TIME && currTime > config.START_TIME) {
       request({'url':config.remoteURL+req.url,
       'method':'POST',
       'params': req.params,
@@ -52,13 +52,13 @@ dispatcher.onPost('/ping', function(req, res) {
         res.writeHead(500,{'Content-Type':'plain/text'});
         return res.end('The office is not online :(');
       });
-    }else {
-      res.writeHead(200, {'Content-Type': 'application/json'});
-      res.end(JSON.stringify({
-        'response_type': 'in_channel',
-        'text': 'The Office is not currently open'
-      }));
-    }
+    // }else {
+    //   res.writeHead(200, {'Content-Type': 'application/json'});
+    //   res.end(JSON.stringify({
+    //     'response_type': 'in_channel',
+    //     'text': 'The Office is not currently open'
+    //   }));
+    // }
   }else {
     res.writeHead(401);
     return res.end('Unauthorized');
