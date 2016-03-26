@@ -25,7 +25,7 @@ server.listen(PORT, function(){
 
 dispatcher.onGet('/', function(req, res) {
   res.writeHead(200, {'Content-Type': 'application/json'});
-  return res.end(JSON.stringify({status:'online',timeStamp:new time.Date().setTimezone(config.TIMEZONE)}));
+  return res.end(JSON.stringify({status:'online',timeStamp:new time.Date().setTimezone(config.TIMEZONE).toString()}));
 });
 
 dispatcher.onPost('/ping', function(req, res) {
