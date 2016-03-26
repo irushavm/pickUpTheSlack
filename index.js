@@ -29,26 +29,36 @@ dispatcher.onGet('/', function(req, res) {
 
 dispatcher.onPost('/ping', function(req, res) {
   if(req.params.token === config.slackValidationToken) {
-    request({'url':config.remoteURL+req.url,
-    'method':'POST',
-    'params': req.params,
-    'headers': req.headers,
-    'form': req.body,
-    'timeout': 500
-  },function(err,result,resultBody){
-    if(err) {
-      res.writeHead(500,{'Content-Type':'plain/text'});
-      return res.end('The office is not online :(');
+    var currTime = new Date().getHours()*60 + new Date().getMinutes;
+
+    if(currTime < config.END_TIME && currTime > config.START_TIME) {
+      request({'url':config.remoteURL+req.url,
+      'method':'POST',
+      'params': req.params,
+      'headers': req.headers,
+      'form': req.body,
+      'timeout': 500
+      },function(err,result,resultBody){
+        if(err) {
+          res.writeHead(500,{'Content-Type':'plain/text'});
+          return res.end('The office is not online :(');
+        }
+        console.log(result);
+        res.writeHead(result.statusCode,result.headers);
+        return res.end(resultBody);
+      })
+      .on('error', function(err) {
+        console.log(err);
+        res.writeHead(500,{'Content-Type':'plain/text'});
+        return res.end('The office is not online :(');
+      });
+    }else {
+      res.writeHead(200, {'Content-Type': 'application/json'});
+      res.end(JSON.stringify({
+        'response_type': 'in_channel',
+        'text': 'The Office is not currently open'
+      }));
     }
-    console.log(result);
-    res.writeHead(result.statusCode,result.headers);
-    return res.end(resultBody);
-  })
-  .on('error', function(err) {
-    console.log(err);
-    res.writeHead(500,{'Content-Type':'plain/text'});
-    return res.end('The office is not online :(');
-  });
   }else {
     res.writeHead(401);
     return res.end('Unauthorized');
