@@ -55,7 +55,7 @@ dispatcher.onPost('/ping', function(req, res) {
       });
     }else {
       res.writeHead(200, {'Content-Type': 'application/json'});
-      res.end('The Office is currently closed. it is open between ' + math.floor(config.START_TIME/60) + ':' + config.START_TIME % 60 + ' and ' +  math.floor(config.END_TIME/60) + ':' + config.END_TIME % 60 );
+      res.end('The Office is currently closed. it is open between ' + Math.floor(config.START_TIME/60) + ':' + config.START_TIME % 60 + ' and ' +  Math.floor(config.END_TIME/60) + ':' + config.END_TIME % 60 );
     }
   }else {
     res.writeHead(401);
