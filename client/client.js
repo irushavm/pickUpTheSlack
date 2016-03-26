@@ -7,7 +7,7 @@ var config = require('../config.json');
 var audioFileLocation = '../' + config.AUDIO_FILE_LOCATION;
 var nextTime = 0;
 var currTime;
-var notifyThreshold;
+var notifyTimeout;
 var PORT = process.env.PORT || 5050;
 
 function handleRequest(request, response){
@@ -29,12 +29,12 @@ dispatcher.onPost('/ping', function(req, res) {
   console.log(req.params);
   if(req.params.token === config.SLACK_VALIDATION_TOKEN) {
 
-    //determine the notify threshold based on the priority (normal or force)
-    notifyThreshold = req.params.text === 'force' ? config.NOTIFY_FORCE_THRESHOLD_SECONDS: config.NOTIFY_THRESHOLD_SECONDS;
+    //determine the notify TIMEOUT based on the priority (normal or force)
+    notifyTimeout = req.params.text === 'force' ? config.NOTIFY_FORCE_TIMEOUT_SECONDS: config.NOTIFY_TIMEOUT_SECONDS;
 
     currTime = new Date().getTime();
     if( currTime > nextTime) {
-      nextTime = currTime + notifyThreshold*1000;
+      nextTime = currTime + notifyTimeout*1000;
       console.log(nextTime);
       console.log(currTime);
       //Check if running on Windows

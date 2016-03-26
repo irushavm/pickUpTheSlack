@@ -1,6 +1,6 @@
 {
   "name": "pick-up-the-slack",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A server to intercept slack command requests and send out a ping a to the complimentary program running on a remote computer",
   "main": "index.js",
   "scripts": {

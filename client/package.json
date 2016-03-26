@@ -1,10 +1,10 @@
 {
   "name": "pick-up-the-slack-client",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "The client that responds to the server requests",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node client.js",
     "test": "jshint ."
   },
   "repository": {
