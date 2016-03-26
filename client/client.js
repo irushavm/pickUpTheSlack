@@ -3,6 +3,7 @@ var os = require('os');
 var http = require('http');
 var dispatcher = require('httpdispatcher');
 var Player = require('player');
+var time = require('time');
 var config = require('../config.json');
 var audioFileLocation = '../' + config.AUDIO_FILE_LOCATION;
 var nextTime = 0;
@@ -12,7 +13,6 @@ var PORT = process.env.PORT || 5050;
 
 function handleRequest(request, response){
     try {
-        console.log(request.url);
         dispatcher.dispatch(request, response);
     } catch(err) {
         console.log(err);
@@ -27,13 +27,20 @@ server.listen(PORT, function(){
 
 dispatcher.onPost('/ping', function(req, res) {
   if(req.params.token === config.SLACK_VALIDATION_TOKEN) {
-
-    //determine the notify TIMEOUT based on the priority (normal or force)
-    notifyTimeout = req.params.text === 'force' ? config.NOTIFY_FORCE_TIMEOUT_SECONDS: config.NOTIFY_TIMEOUT_SECONDS;
-
-    currTime = new Date().getTime();
+    //determine the notify TIMEOUT based on the priority (normal or force) and office hours
+    var tNow = new time.Date().setTimezone(config.TIMEZONE);
+    var timeNow = tNow.getHours()*60 + tNow.getMinutes();
+    if ((timeNow < config.END_TIME && timeNow > config.START_TIME)) {
+      notifyTimeout = config.NOTIFY_TIMEOUT_SECONDS;
+    }
+    else {
+      notifyTimeout = req.params.text === 'force' ? config.NOTIFY_FORCE_TIMEOUT_SECONDS: config.NOTIFY_TIMEOUT_SECONDS;
+    }
+    currTime = time.time();
+    console.log(currTime);
+    console.log(nextTime);
     if( currTime > nextTime) {
-      nextTime = currTime + notifyTimeout*1000;
+      nextTime = currTime + notifyTimeout;
       //Check if running on Windows
       if(os.type()==='Windows_NT') {
         var edge = require('edge');
@@ -94,7 +101,7 @@ dispatcher.onPost('/ping', function(req, res) {
       res.writeHead(200, {'Content-Type': 'application/json'});
       res.end(JSON.stringify({
         'response_type': 'ephemeral',
-        'text': 'Slow down there cowboy. You can ping the office in ' + Math.floor((nextTime-currTime)/1000).toString() + ' seconds.'
+        'text': 'Slow down there cowboy. You can ping the office in ' + Math.floor(nextTime-currTime).toString() + ' seconds.'
       }));
     }
   }else {
