@@ -26,7 +26,6 @@ server.listen(PORT, function(){
 });
 
 dispatcher.onPost('/ping', function(req, res) {
-  console.log(req.params);
   if(req.params.token === config.SLACK_VALIDATION_TOKEN) {
 
     //determine the notify TIMEOUT based on the priority (normal or force)
@@ -35,8 +34,6 @@ dispatcher.onPost('/ping', function(req, res) {
     currTime = new Date().getTime();
     if( currTime > nextTime) {
       nextTime = currTime + notifyTimeout*1000;
-      console.log(nextTime);
-      console.log(currTime);
       //Check if running on Windows
       if(os.type()==='Windows_NT') {
         var edge = require('edge');
@@ -108,4 +105,5 @@ dispatcher.onPost('/ping', function(req, res) {
 
 dispatcher.onError(function(req, res) {
   res.writeHead(404);
+  res.end('Method Not Found');
 });

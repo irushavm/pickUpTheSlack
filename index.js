@@ -65,4 +65,5 @@ dispatcher.onPost('/ping', function(req, res) {
 
 dispatcher.onError(function(req, res) {
   res.writeHead(404);
+  res.end('Method Not Found');
 });
