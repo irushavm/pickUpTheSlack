@@ -1,7 +1,10 @@
 {
-  "slackValidationToken": "yNI90mQ1PpuvMdwLpu6L8Mwt",
-  "remoteURL": "http://198.48.224.18:51413",
+  "SLACK_VALIDATION_TOKEN": "yNI90mQ1PpuvMdwLpu6L8Mwt",
+  "SLACK_TEAM_DOMAN": "ieeecarleton",
+  "SLACK_COMMAND": "/office",
+  "REMOTE_URL": "http://198.48.224.18:51413",
+  "AUDIO_FILE_LOCATION": "res/audio/hello.mp3",
   "START_TIME": 510,
   "END_TIME": 1050,
-  "NOTIFY_THRESHOLD": 60
+  "NOTIFY_THRESHOLD_SECONDS": 30
 }

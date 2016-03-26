@@ -4,10 +4,10 @@ var http = require('http');
 var dispatcher = require('httpdispatcher');
 var Player = require('player');
 var config = require('../config.json');
-var AUDIO_FILE_LOCATION = '../public/audio/hello.mp3';
-var lastTime;
+var audioFileLocation = '../' + config.AUDIO_FILE_LOCATION;
+var nextTime = 0;
 var currTime;
-var PORT = process.env.PORT || 5000;
+var PORT = process.env.PORT || 5050;
 
 function handleRequest(request, response){
     try {
@@ -24,17 +24,15 @@ server.listen(PORT, function(){
     console.log('Server listening on: http://localhost:%s', PORT);
 });
 
-dispatcher.onGet('/', function(req, res) {
-  res.writeHead(200, {'Content-Type': 'application/json'});
-  res.end(JSON.stringify({status:'online',timeStamp:new Date()}));
-});
-
 dispatcher.onPost('/ping', function(req, res) {
   console.log(req.params);
-  if(req.params.token === config.slackValidationToken) {
+  if(req.params.token === config.SLACK_VALIDATION_TOKEN) {
     currTime = new Date().getTime();
-    if(currTime < lastTime + config.NOTIFY_THRESHOLD) {
-      lastTime = currTime;
+    if( currTime > nextTime) {
+      nextTime = currTime + config.NOTIFY_THRESHOLD_SECONDS*1000;
+      console.log(nextTime);
+      console.log(currTime);
+      //Check if running on Windows
       if(os.type()==='Windows_NT') {
         var edge = require('edge');
         var windowsPlayer = edge.func(function() {/*
@@ -52,7 +50,7 @@ dispatcher.onPost('/ping', function(req, res) {
                 };
             }
         */});
-        var winPlayer = windowsPlayer(AUDIO_FILE_LOCATION, true);
+        var winPlayer = windowsPlayer(audioFileLocation, true);
         winPlayer.start(null, function (err) {
             if (err) throw err;
             console.log('Started playing');
@@ -66,12 +64,12 @@ dispatcher.onPost('/ping', function(req, res) {
                 console.log('Stopped playing');
             });
         }, 25000);
-
-      }else {
-        var player = new Player(AUDIO_FILE_LOCATION);
+      }
+      //If running on Linux or OSX
+      else {
+        var player = new Player(audioFileLocation);
         player.play();
-
-        player.on('playing',function(item){
+        player.on('playing',function(item){ // jshint ignore:line
           console.log('Pinging office!');
           res.writeHead(200, {'Content-Type': 'application/json'});
           res.end(JSON.stringify({
@@ -94,7 +92,7 @@ dispatcher.onPost('/ping', function(req, res) {
       res.writeHead(200, {'Content-Type': 'application/json'});
       res.end(JSON.stringify({
         'response_type': 'ephemeral',
-        'text': 'Slow down there cowboy. You can ping in the office in ' + currTime - lastTime + ' seconds.'
+        'text': 'Slow down there cowboy. You can ping the office in ' + Math.floor((nextTime-currTime)/1000).toString() + ' seconds.'
       }));
     }
   }else {
