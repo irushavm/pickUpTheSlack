@@ -37,8 +37,8 @@ dispatcher.onPost('/ping', function(req, res) {
     'timeout': 500
   },function(err,result,resultBody){
     if(err) {
-      res.writeHead(404,'The office is not online :(');
-      return res.end(resultBody);
+      res.writeHead(500,{'Content-Type':'plain/text'});
+      return res.end('The office is not online :(');
     }
     console.log(result);
     res.writeHead(result.statusCode,result.headers);
