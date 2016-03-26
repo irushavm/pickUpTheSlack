@@ -4,6 +4,7 @@
 
 A slack(https://slack.com/) slash command integration made for the IEEE Carleton Office to notify users in the room to look at slack.
 
+A demo of this integration is at https://ieeecarleton.slack.com
 
 ## Motivation
 A few of the exec team wanted a quick way to notify anyone in the office instead of systematically mmentioning people one by one until they found someone who is in the room.
