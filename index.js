@@ -3,6 +3,7 @@ var http = require('http');
 var dispatcher = require('httpdispatcher');
 var config = require('./config.json');
 var request = require('request');
+var time = require('time');
 
 var PORT = process.env.PORT || 5000;
 
@@ -24,14 +25,15 @@ server.listen(PORT, function(){
 
 dispatcher.onGet('/', function(req, res) {
   res.writeHead(200, {'Content-Type': 'application/json'});
-  return res.end(JSON.stringify({status:'online',timeStamp:new Date()}));
+  return res.end(JSON.stringify({status:'online',timeStamp:new time.Date().setTimezone(config.TIMEZONE)}));
 });
 
 dispatcher.onPost('/ping', function(req, res) {
   if(req.params.token === config.SLACK_VALIDATION_TOKEN &&
     req.params.team_domain === config.SLACK_TEAM_DOMAN &&
     req.params.command === config.SLACK_COMMAND) {
-    var currTime = new Date().getHours()*60 + new Date().getMinutes();
+    var tNow = new time.Date().setTimezone(config.TIMEZONE);
+    var currTime = tNow.getHours()*60 + tNow.getMinutes();
     if((currTime < config.END_TIME && currTime > config.START_TIME) || req.params.text === 'force') {
       request({'url':config.REMOTE_URL+req.url,
       'method':'POST',
